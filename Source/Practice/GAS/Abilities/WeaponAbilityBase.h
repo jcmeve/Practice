@@ -21,23 +21,20 @@ class UWeaponBaseData;
  *
  *   ActivateAbility → LogicList 순회 → 각 Logic::OnExecute()
  *   EndAbility      → LogicList 순회 → 각 Logic::OnAbilityEnd()
- *   InputPressed    → ULogic_ComboAdvance::QueueInput() (있으면)
+ *   (재입력은 GASCharacterBase가 InputTag GameplayEvent로 발송 → Logic이 구독해서 처리)
  *
  * 에디터 세팅 예시:
  *
  *   [콤보 공격 어빌리티 BP]
- *     LogicList[0] = ULogic_PlayMontage   { Montage=SM_Combo, Sections=["Hit1",...] }
- *     LogicList[1] = ULogic_ComboAdvance  { ComboSections=["Hit1","Hit2","Hit3"] }
- *     LogicList[2] = ULogic_SphereTrace   { Dist=75, Radius=75, DamageGE=GE_Damage }
+ *     LogicList[0] = ULogic_ComboAttack  { ComboMontage, Sections, InputPressedTag }
+ *     LogicList[1] = ULogic_SphereTrace  { Dist=75, Radius=75, DamageGE=GE_Damage }
  *
- *   [방패 가드 어빌리티 BP]
- *     LogicList[0] = ULogic_PlayMontage       { Montage=SM_GuardIdle, EndAbilityOnEnd=false }
- *     LogicList[1] = ULogic_ParryWindow        { Duration=0.35 }
- *     LogicList[2] = ULogic_WaitInputRelease   { ReleaseEventTag="Event.Guard.Released" }
+ *   [차지 공격 어빌리티 BP]
+ *     LogicList[0] = ULogic_ChargeAttack { ChargeMontage, AttackMontage, TriggerEventTag }
+ *     LogicList[1] = ULogic_SphereTrace  { Dist=120, DamageGE=GE_Damage }
  *
  *   [패링 어빌리티 BP]
- *     LogicList[0] = ULogic_PlayMontage   { Montage=SM_ParryCounter }
- *     LogicList[1] = ULogic_SphereTrace   { Dist=100, DamageGE=GE_ParryDamage }
+ *     LogicList[0] = ULogic_SphereTrace  { Dist=100, DamageGE=GE_ParryDamage }
  */
 UCLASS()
 class PRACTICE_API UWeaponAbilityBase : public UGameplayAbility
@@ -70,12 +67,6 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility,
 		bool bWasCancelled) override;
-
-	/** 동일 입력이 재입력될 때 콤보 큐잉으로 전달 */
-	virtual void InputPressed(
-		const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo) override;
 
 	// ── Logic 탐색 유틸 ───────────────────────────────────────
 

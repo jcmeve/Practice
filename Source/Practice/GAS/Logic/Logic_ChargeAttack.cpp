@@ -2,7 +2,6 @@
 
 #include "Logic_ChargeAttack.h"
 #include "WeaponAbilityBase.h"
-#include "Logic_PlayMontage.h"
 #include "Logic_SphereTrace.h"
 #include "PracticeGameplayTags.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -17,6 +16,15 @@ void ULogic_ChargeAttack::OnExecute(UWeaponAbilityBase* Ability)
 	bReleased    = false;
 	bFired       = false;
 	StartTime    = Ability->GetWorld()->GetTimeSeconds();
+
+	// 차지 루프 몽타주 직접 재생
+	if (ChargeMontage)
+	{
+		ChargeMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+			Ability, NAME_None, ChargeMontage, 1.0f, NAME_None, true);
+		ChargeMontageTask->OnInterrupted.AddDynamic(this, &ULogic_ChargeAttack::OnChargeInterrupted);
+		ChargeMontageTask->ReadyForActivation();
+	}
 
 	const float ClampedMax = FMath::Max(MaxChargeTime, MinChargeTime);
 
@@ -43,8 +51,9 @@ void ULogic_ChargeAttack::OnAbilityEnd(UWeaponAbilityBase* Ability, bool bWasCan
 {
 	Ability->GetWorld()->GetTimerManager().ClearTimer(MinTimer);
 	Ability->GetWorld()->GetTimerManager().ClearTimer(MaxTimer);
-	AttackTask   = nullptr;
-	OwnerAbility = nullptr;
+	ChargeMontageTask = nullptr;
+	AttackTask        = nullptr;
+	OwnerAbility      = nullptr;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -148,10 +157,12 @@ void ULogic_ChargeAttack::PlayAttackMontage()
 	UWeaponAbilityBase* Ability = OwnerAbility.Get();
 	if (!Ability) return;
 
-	// 루프 몽타주 Detach — 중단 시 어빌리티 종료 방지
-	if (ULogic_PlayMontage* Loop = GetSiblingLogic<ULogic_PlayMontage>(Ability))
+	// 차지 루프 태스크 델리게이트 해제
+	// 공격 몽타주가 루프를 중단시켜도 OnChargeInterrupted가 호출되지 않도록
+	if (ChargeMontageTask)
 	{
-		Loop->Detach();
+		ChargeMontageTask->OnInterrupted.RemoveDynamic(this, &ULogic_ChargeAttack::OnChargeInterrupted);
+		ChargeMontageTask = nullptr;
 	}
 
 	if (!AttackMontage)
@@ -172,6 +183,13 @@ void ULogic_ChargeAttack::PlayAttackMontage()
 // ─────────────────────────────────────────────────────────────────────────────
 //  Delegates
 // ─────────────────────────────────────────────────────────────────────────────
+
+void ULogic_ChargeAttack::OnChargeInterrupted()
+{
+	// 외부 원인으로 루프 몽타주가 중단됐을 때 어빌리티 취소
+	if (OwnerAbility.IsValid())
+		OwnerAbility->RequestEnd(true);
+}
 
 void ULogic_ChargeAttack::OnAttackCompleted()
 {

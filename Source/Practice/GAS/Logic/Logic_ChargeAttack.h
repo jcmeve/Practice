@@ -14,8 +14,9 @@ class UAbilityTask_WaitGameplayEvent;
  * 차지 공격 전용 로직 — 타이밍 + 공격 몽타주 + 얼리 릴리즈 처리 통합.
  *
  * Phase 1 (루프):
- *   OnExecute → MinChargeTimer + MaxChargeTimer 시작
- *              + TriggerEventTag(릴리즈 이벤트) 구독
+ *   OnExecute → ChargeMontage 재생 (루프)
+ *             → MinChargeTimer + MaxChargeTimer 시작
+ *             + TriggerEventTag(릴리즈 이벤트) 구독
  *
  * 릴리즈 처리:
  *   · TimeHeld >= MinChargeTime → 즉시 발동
@@ -23,21 +24,21 @@ class UAbilityTask_WaitGameplayEvent;
  *   · MaxChargeTime 도달         → 자동 발동 (MaxChargeDamageMultiplier)
  *
  * Phase 2 (공격):
- *   → Logic_PlayMontage Detach (루프 중단 시 어빌리티 종료 방지)
- *   → 공격 몽타주 재생
+ *   → ChargeMontageTask 델리게이트 해제 (루프 중단 시 어빌리티 종료 방지)
+ *   → AttackMontage 재생
  *   → Event.Anim.DoAttackTrace → Logic_SphereTrace가 데미지 처리
  *   → 몽타주 완료 → RequestEnd
  *
  * BP 세팅:
- *   LogicTag            = "Logic.ChargeTimer"  ← GE 모디파이어가 이 태그로 수정
- *   TriggerEventTag     = "Input.SecondaryAttack"
- *   AttackMontage       = SM_ChargeAttack
- *   MinChargeTime       = 0.8
- *   MaxChargeTime       = 0.8  (스킬로 늘어남)
+ *   LogicTag        = "Logic.ChargeTimer"  ← GE 모디파이어가 이 태그로 수정
+ *   TriggerEventTag = "Input.SecondaryAttack"
+ *   ChargeMontage   = SM_ChargeLoop
+ *   AttackMontage   = SM_ChargeAttack
+ *   MinChargeTime   = 0.8
+ *   MaxChargeTime   = 0.8  (스킬로 늘어남)
  *
  * LogicList (BP_Ability_SwordCharge):
- *   [0] Logic_PlayMontage   { SM_ChargeLoop, EndOnEnd=false }
- *   [1] Logic_ChargeAttack  ← 이 클래스
+ *   [0] Logic_ChargeAttack  ← 이 클래스 (루프+공격 통합)
  *   [2] Logic_SphereTrace   { DamageGE, StaggerGE }
  */
 UCLASS(DisplayName = "Logic: Charge Attack")
@@ -65,7 +66,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charge|Input")
 	FGameplayTag TriggerEventTag;
 
-	// ── 공격 몽타주 ───────────────────────────────────────────
+	// ── 몽타주 ───────────────────────────────────────────────
+
+	/** 홀드 중 재생되는 루프 몽타주 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charge|Montage")
+	TObjectPtr<UAnimMontage> ChargeMontage;
 
 	/** 릴리즈/자동발동 시 재생할 공격 몽타주 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charge|Montage")
@@ -99,6 +104,7 @@ private:
 
 	TWeakObjectPtr<UWeaponAbilityBase> OwnerAbility;
 
+	UPROPERTY() TObjectPtr<UAbilityTask_PlayMontageAndWait> ChargeMontageTask;
 	UPROPERTY() TObjectPtr<UAbilityTask_PlayMontageAndWait> AttackTask;
 
 	void OnReleaseEvent(float TimeHeld);
@@ -107,6 +113,7 @@ private:
 	void Fire(float TimeHeld);
 	void PlayAttackMontage();
 
+	UFUNCTION() void OnChargeInterrupted(); // 루프 몽타주 외부 중단 시
 	UFUNCTION() void OnAttackCompleted();
 	UFUNCTION() void OnAttackInterrupted();
 };

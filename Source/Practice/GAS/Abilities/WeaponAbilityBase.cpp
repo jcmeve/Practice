@@ -5,7 +5,6 @@
 #include "WeaponInstance.h"
 #include "WeaponBaseData.h"
 #include "PlayerAttributeSet.h"
-#include "Logic_ComboAdvance.h"
 #include "LogicModifierComponent.h"
 #include "LogicInjectorComponent.h"
 #include "AbilitySystemComponent.h"
@@ -77,21 +76,6 @@ void UWeaponAbilityBase::EndAbility(
 	InjectedLogics.Empty();
 	EventListenerTasks.Empty();
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  InputPressed — 콤보 큐잉 전달
-// ─────────────────────────────────────────────────────────────────────────────
-
-void UWeaponAbilityBase::InputPressed(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo)
-{
-	if (ULogic_ComboAdvance* Combo = GetLogic<ULogic_ComboAdvance>())
-	{
-		Combo->QueueInput();
-	}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
