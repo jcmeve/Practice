@@ -47,7 +47,8 @@ public class Practice : ModuleRules
 			"Practice/GAS/InputAbilityMap",
 			"Practice/GAS/Abilities",
 			"Practice/GAS/Logic",
-			"Practice/GAS/Logic/Mods",
+			"Practice/GAS/AbilityData",
+			"Practice/GAS/AbilityData/Fragments",
 			"Practice/GAS/Effects",
 			"Practice/SkillTree",
 		});

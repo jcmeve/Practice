@@ -6,12 +6,14 @@
 #include "Abilities/GameplayAbility.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "AbilityLogicBase.h"
+#include "AbilityFragment.h"
 #include "WeaponTypes.h"
 #include "WeaponAbilityBase.generated.h"
 
 class AGASCharacterBase;
 class UWeaponInstance;
 class UWeaponBaseData;
+class UAbilityDataRegistry;
 
 /**
  * B방식 무기 어빌리티 베이스 — 로직 주입 Shell.
@@ -43,6 +45,35 @@ class PRACTICE_API UWeaponAbilityBase : public UGameplayAbility
 
 public:
 	UWeaponAbilityBase();
+
+	// ── AbilityData / Fragment ────────────────────────────────
+
+	/**
+	 * AbilityTag → Fragment 클래스 스키마 DataAsset.
+	 * PostEditChangeProperty가 이 레지스트리를 참조해 Fragments를 자동 구성한다.
+	 * 부모 BP에 한 번만 설정하면 자식 어빌리티가 상속한다.
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilityData")
+	TObjectPtr<UAbilityDataRegistry> DataRegistry;
+
+	/**
+	 * 이 어빌리티가 보유하는 Fragment 인스턴스 목록.
+	 * AbilityTags 변경 시 PostEditChangeProperty가 자동으로 동기화한다.
+	 * 각 Fragment의 수치를 에디터에서 직접 수정 가능.
+	 */
+	UPROPERTY(EditDefaultsOnly, Instanced, BlueprintReadOnly, Category = "AbilityData")
+	TArray<TObjectPtr<UAbilityFragment>> Fragments;
+
+	/** 런타임 시 Fragment를 타입으로 탐색 */
+	template<typename T>
+	T* GetFragment() const
+	{
+		for (const auto& Pair : RuntimeFragments)
+		{
+			if (T* Typed = Cast<T>(Pair.Value.Get())) return Typed;
+		}
+		return nullptr;
+	}
 
 	// ── LogicList ─────────────────────────────────────────────
 
@@ -116,7 +147,7 @@ public:
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, bWasCancelled);
 	}
 
-private:
+protected:
 
 	/**
 	 * 모든 Logic의 GetSubscribedEventTags()를 수집해
@@ -138,12 +169,38 @@ private:
 	TArray<TObjectPtr<UAbilityLogicBase>> InjectedLogics;
 
 	/**
-	 * 발동 시 ASC의 활성 GE를 스캔:
-	 *   ULogicModifierComponent → 매칭 Logic에 ApplyGEModifier
-	 *   ULogicInjectorComponent → Logic 복제 후 InjectedLogics에 추가
-	 * OnExecute 이전에 호출되어야 한다.
+	 * Fragments를 복제 후 RuntimeFragments 구성,
+	 * GE AbilityModifierComponent를 리플렉션으로 적용,
+	 * ULogicInjectorComponent를 InjectedLogics에 추가.
 	 */
 	void ScanAndApplyGEModifiers();
+
+	/**
+	 * Fragments → RuntimeFragments 복제.
+	 * Assert: 중복 FragmentTag.
+	 */
+	void BuildRuntimeFragments();
+
+	/**
+	 * 모든 Logic의 GetRequiredFragmentTags() 검사.
+	 * 필요한 Fragment가 RuntimeFragments에 없으면 ensure 실패.
+	 */
+	void ValidateFragments() const;
+
+	/** FragmentTag → 런타임 Fragment (GE Modifier가 수정) */
+	TMap<FGameplayTag, TObjectPtr<UAbilityFragment>> RuntimeFragments;
+
+#if WITH_EDITOR
+	/**
+	 * AbilityTags 변경 시 Fragments 배열을 레지스트리 스키마에 맞게 동기화.
+	 * Assert: 같은 FragmentTag 중복 / 스키마에 없는 Fragment 수동 추가.
+	 */
+	void SyncFragmentsToTags();
+
+public:
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+protected:
+#endif
 };
 
 // ── GetSiblingLogic 템플릿 구현 ───────────────────────────────────────────────

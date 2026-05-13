@@ -40,25 +40,6 @@ class PRACTICE_API UAbilityLogicBase : public UObject
 public:
 
 	/**
-	 * 이 Logic을 식별하는 태그.
-	 * GE의 ULogicModifierComponent / ULogicInjectorComponent가
-	 * 이 태그를 기준으로 어느 Logic을 수정/대상으로 할지 결정한다.
-	 *
-	 * 예) Logic_ChargeAttack → "Logic.ChargeTimer"
-	 *     Logic_SphereTrace → "Logic.SphereTrace"
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Logic")
-	FGameplayTag LogicTag;
-
-	/**
-	 * 어빌리티 발동 시 매칭된 GE의 ULogicModifierComponent로부터 호출.
-	 * 서브클래스에서 override해 PropertyName 기반으로 값을 수정한다.
-	 *
-	 * 예) Mod_ChargeAttack_MaxChargeTime::Apply
-	 *       if (Mod.PropertyName == "MaxChargeTime") MaxChargeTime += Mod.Magnitude;
-	 */
-
-	/**
 	 * 어빌리티 활성화(ActivateAbility) 시 호출.
 	 * AbilityTask 생성, 태그 추가, 타이머 등록 등 "Enter" 동작을 여기서.
 	 * ※ GameplayEvent 구독은 여기서 하지 않는다 — GetSubscribedEventTags로 선언하면
@@ -86,6 +67,13 @@ public:
 	 * EventTag로 어떤 이벤트인지 구분한다.
 	 */
 	virtual void OnGameplayEvent(FGameplayTag EventTag, const FGameplayEventData& Payload) {}
+
+	/**
+	 * 이 Logic이 동작하기 위해 반드시 필요한 Fragment 태그 목록.
+	 * ActivateAbility 시 ValidateFragments()가 이 목록을 검사한다.
+	 * 필요한 Fragment가 없으면 ensure 실패로 경고.
+	 */
+	virtual TArray<FGameplayTag> GetRequiredFragmentTags() const { return {}; }
 
 	/**
 	 * 같은 어빌리티의 LogicList에서 타입 T인 첫 번째 Logic을 반환.

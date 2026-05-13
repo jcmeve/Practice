@@ -60,12 +60,8 @@ namespace PracticeGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Data_Damage,              "Data.Damage");
 	UE_DEFINE_GAMEPLAY_TAG(Data_StaggerDamage,       "Data.StaggerDamage");
 
-	// ── Logic 식별 태그 ──────────────────────────────────────────────────────
-	UE_DEFINE_GAMEPLAY_TAG(Logic_ChargeTimer,   "Logic.ChargeTimer");
-	UE_DEFINE_GAMEPLAY_TAG(Logic_SphereTrace,  "Logic.SphereTrace");
-	UE_DEFINE_GAMEPLAY_TAG(Logic_ComboAdvance, "Logic.ComboAdvance");
-	UE_DEFINE_GAMEPLAY_TAG(Logic_ParryWindow,  "Logic.ParryWindow");
-	UE_DEFINE_GAMEPLAY_TAG(Logic_PlayMontage,  "Logic.PlayMontage");
+	// ── Fragment 태그 ────────────────────────────────────────────────────────
+	UE_DEFINE_GAMEPLAY_TAG(Fragment_Charge, "Fragment.Charge");
 
 	// ── Skill ─────────────────────────────────────────────────────────────────
 	UE_DEFINE_GAMEPLAY_TAG(Skill_ChargeDelay, "Skill.ChargeDelay");

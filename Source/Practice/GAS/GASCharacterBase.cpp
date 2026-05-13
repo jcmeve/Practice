@@ -13,7 +13,6 @@
 #include "InputMappingContext.h"
 #include "EnhancedPlayerInput.h"
 #include "InputCoreTypes.h"
-#include "GE_Skill_ChargeDelay.h"
 #include "AbilitySystemBlueprintLibrary.h"
 // Camera
 #include "GameFramework/SpringArmComponent.h"
@@ -441,24 +440,30 @@ void AGASCharacterBase::ToggleChargeDelaySkill()
 
 	if (ActiveChargeDelayHandle.IsValid())
 	{
-		// 이미 적용 중 → 제거
 		AbilitySystemComponent->RemoveActiveGameplayEffect(ActiveChargeDelayHandle);
 		ActiveChargeDelayHandle = FActiveGameplayEffectHandle();
-		UE_LOG(LogGASCharacter, Log, TEXT("ChargeDelay 스킬 해제 (ChargeTimeBonus 감소)"));
+		UE_LOG(LogGASCharacter, Log, TEXT("ChargeDelay 스킬 해제"));
 	}
 	else
 	{
-		// 적용: GE_Skill_ChargeDelay → ChargeTimeBonus += 1.2
+		if (!ChargeDelaySkillEffect)
+		{
+			UE_LOG(LogGASCharacter, Warning,
+				TEXT("ToggleChargeDelaySkill: ChargeDelaySkillEffect가 설정되지 않았습니다. "
+				     "BP_GASCharacter의 ChargeDelaySkillEffect에 GE 에셋을 연결하세요."));
+			return;
+		}
+
 		FGameplayEffectContextHandle Context = AbilitySystemComponent->MakeEffectContext();
 		Context.AddSourceObject(this);
 
 		FGameplayEffectSpecHandle Spec = AbilitySystemComponent->MakeOutgoingSpec(
-			UGE_Skill_ChargeDelay::StaticClass(), 1, Context);
+			ChargeDelaySkillEffect, 1, Context);
 
 		if (Spec.IsValid())
 		{
 			ActiveChargeDelayHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*Spec.Data.Get());
-			UE_LOG(LogGASCharacter, Log, TEXT("ChargeDelay 스킬 획득 (ChargeTimeBonus += 1.2)"));
+			UE_LOG(LogGASCharacter, Log, TEXT("ChargeDelay 스킬 획득"));
 		}
 	}
 }

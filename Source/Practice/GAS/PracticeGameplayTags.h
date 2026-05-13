@@ -59,7 +59,8 @@ namespace PracticeGameplayTags
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_WeaponEquipped);   // "Event.WeaponEquipped"
 
 	// ── Ability ───────────────────────────────────────────────────────────────
-	// Set on UGameplayAbility::AbilityTags. Used for blocking/canceling.
+	// UGameplayAbility::AbilityTags에 설정.
+	// AbilityDataRegistry::AbilitySchema 키로도 사용된다.
 
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack);         // "Ability.Attack"
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack_Combo);   // "Ability.Attack.Combo"
@@ -95,14 +96,11 @@ namespace PracticeGameplayTags
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);              // "Data.Damage"
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StaggerDamage);       // "Data.StaggerDamage"
 
-	// ── Logic 식별 태그 ──────────────────────────────────────────────────────
-	// UAbilityLogicBase::LogicTag에 세팅. GE 모디파이어/인젝터가 이 태그로 대상 Logic을 찾는다.
+	// ── Fragment 태그 ────────────────────────────────────────────────────────
+	// UAbilityFragment 서브클래스가 FragmentTag로 사용.
+	// AbilityDataRegistry 스키마의 키이자 RuntimeFragments의 키.
 
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Logic_ChargeTimer);    // "Logic.ChargeTimer"
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Logic_SphereTrace);   // "Logic.SphereTrace"
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Logic_ComboAdvance);  // "Logic.ComboAdvance"
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Logic_ParryWindow);   // "Logic.ParryWindow"
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Logic_PlayMontage);   // "Logic.PlayMontage"
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fragment_Charge); // "Fragment.Charge"
 
 	// ── Skill ─────────────────────────────────────────────────────────────────
 	// 스킬 획득 시 ASC에 추가되는 태그. Logic에서 읽어 동작을 변경한다.

@@ -186,11 +186,18 @@ public:
 
 	/**
 	 * 차지 유예 스킬 토글 — 키보드 1 바인딩.
-	 * GE_Skill_ChargeDelay를 적용/제거해 ChargeTimeBonus 어트리뷰트를 수정한다.
-	 * 차지 공격 어빌리티는 이 스킬의 존재를 모르고 어트리뷰트 값만 읽는다.
+	 * ChargeDelaySkillEffect를 적용/제거한다.
+	 * BP에서 ChargeDelaySkillEffect에 GE 에셋을 연결해야 동작한다.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GAS|Debug")
 	void ToggleChargeDelaySkill();
+
+	/**
+	 * 차지 유예 스킬에 적용할 GE 에셋.
+	 * BP에서 UAbilityModifierComponent가 설정된 GE를 지정한다.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS|Debug")
+	TSubclassOf<UGameplayEffect> ChargeDelaySkillEffect;
 
 private:
 	/** 현재 적용 중인 ChargeDelay 스킬 GE 핸들 (토글용) */
