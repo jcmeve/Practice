@@ -37,11 +37,4 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Fragment")
 	FGameplayTag FragmentTag;
 
-	/**
-	 * 이 Fragment를 필요로 하는 AbilityTag 목록.
-	 * AbilityDataRegistry가 이 정보를 기반으로 스키마를 구성한다.
-	 * 서브클래스 생성자에서 설정한다.
-	 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Fragment")
-	FGameplayTagContainer SupportedAbilityTags;
 };

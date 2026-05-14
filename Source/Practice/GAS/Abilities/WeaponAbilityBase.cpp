@@ -175,9 +175,32 @@ void UWeaponAbilityBase::ScanAndApplyGEModifiers()
 		// ③ Logic 주입
 		if (const ULogicInjectorComponent* InjComp = GEDef->FindComponent<ULogicInjectorComponent>())
 		{
-			for (const TObjectPtr<UAbilityLogicBase>& Template : InjComp->LogicsToInject)
+			// RequiredAbilityTags가 비어있으면 무조건 주입
+			// 있으면 AbilityTags + 장착 무기 WeaponTags 합산 후 HasAll (AND) 검사
+			bool bTagsMatch = InjComp->RequiredAbilityTags.IsEmpty();
+
+			if (!bTagsMatch)
 			{
-				if (Template) InjectedLogics.Add(DuplicateObject<UAbilityLogicBase>(Template, this));
+				FGameplayTagContainer CombinedTags = GetAssetTags();
+
+				// 장착 무기의 WeaponTags 추가
+				if (const UWeaponInstance* Weapon = GetCurrentWeapon())
+				{
+					if (Weapon->BaseData)
+					{
+						CombinedTags.AppendTags(Weapon->BaseData->WeaponTags);
+					}
+				}
+
+				bTagsMatch = CombinedTags.HasAll(InjComp->RequiredAbilityTags);
+			}
+
+			if (bTagsMatch)
+			{
+				for (const TObjectPtr<UAbilityLogicBase>& Template : InjComp->LogicsToInject)
+				{
+					if (Template) InjectedLogics.Add(DuplicateObject<UAbilityLogicBase>(Template, this));
+				}
 			}
 		}
 	}

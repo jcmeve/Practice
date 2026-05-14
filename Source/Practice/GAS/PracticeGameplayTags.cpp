@@ -60,6 +60,12 @@ namespace PracticeGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Data_Damage,              "Data.Damage");
 	UE_DEFINE_GAMEPLAY_TAG(Data_StaggerDamage,       "Data.StaggerDamage");
 
+	// ── Weapon 종류 태그 ─────────────────────────────────────────────────────
+	UE_DEFINE_GAMEPLAY_TAG(Weapon_Greatsword, "Weapon.Greatsword");
+	UE_DEFINE_GAMEPLAY_TAG(Weapon_Sword,      "Weapon.Sword");
+	UE_DEFINE_GAMEPLAY_TAG(Weapon_Shield,     "Weapon.Shield");
+	UE_DEFINE_GAMEPLAY_TAG(Weapon_Spear,      "Weapon.Spear");
+
 	// ── Fragment 태그 ────────────────────────────────────────────────────────
 	UE_DEFINE_GAMEPLAY_TAG(Fragment_Charge, "Fragment.Charge");
 

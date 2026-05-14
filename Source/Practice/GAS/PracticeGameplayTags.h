@@ -96,6 +96,14 @@ namespace PracticeGameplayTags
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);              // "Data.Damage"
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StaggerDamage);       // "Data.StaggerDamage"
 
+	// ── Weapon 종류 태그 ─────────────────────────────────────────────────────
+	// UWeaponBaseData::WeaponTags에 세팅. 활성화 시 AbilityTags와 합쳐져 주입 조건 검사에 사용.
+
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Weapon_Greatsword); // "Weapon.Greatsword"
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Weapon_Sword);      // "Weapon.Sword"
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Weapon_Shield);     // "Weapon.Shield"
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Weapon_Spear);      // "Weapon.Spear"
+
 	// ── Fragment 태그 ────────────────────────────────────────────────────────
 	// UAbilityFragment 서브클래스가 FragmentTag로 사용.
 	// AbilityDataRegistry 스키마의 키이자 RuntimeFragments의 키.

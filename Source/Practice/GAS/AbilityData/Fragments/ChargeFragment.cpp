@@ -6,5 +6,4 @@
 UChargeFragment::UChargeFragment()
 {
 	FragmentTag = PracticeGameplayTags::Fragment_Charge;
-	SupportedAbilityTags.AddTag(PracticeGameplayTags::Ability_Attack_Charge);
 }

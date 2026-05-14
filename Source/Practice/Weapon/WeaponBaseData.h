@@ -58,6 +58,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Base")
 	EWeaponType WeaponType = EWeaponType::None;
 
+	/**
+	 * 이 무기의 종류를 나타내는 GameplayTag 목록.
+	 * 어빌리티 활성화 시 AbilityTags와 합쳐져 LogicInjector의 RequiredAbilityTags 검사에 사용된다.
+	 * 예) 대검: [Weapon.Greatsword], 검+방패: [Weapon.Sword, Weapon.Shield]
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Base")
+	FGameplayTagContainer WeaponTags;
+
 	// ── Visual ────────────────────────────────────────────────
 
 	/** List of mesh-to-socket attachments for this weapon.
