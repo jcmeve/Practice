@@ -67,7 +67,7 @@ namespace PracticeGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Weapon_Spear,      "Weapon.Spear");
 
 	// ── Fragment 태그 ────────────────────────────────────────────────────────
-	UE_DEFINE_GAMEPLAY_TAG(Fragment_Charge, "Fragment.Charge");
+	UE_DEFINE_GAMEPLAY_TAG(AbilityFragment_Charge, "AbilityFragment.Charge");
 
 	// ── Skill ─────────────────────────────────────────────────────────────────
 	UE_DEFINE_GAMEPLAY_TAG(Skill_ChargeDelay, "Skill.ChargeDelay");

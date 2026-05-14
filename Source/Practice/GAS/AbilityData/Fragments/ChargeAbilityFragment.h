@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilityFragment.h"
-#include "ChargeFragment.generated.h"
+#include "ChargeAbilityFragment.generated.h"
 
 /**
  * 차지 공격 관련 수치 Fragment.
@@ -13,19 +13,19 @@
  * 에디터에서 수치를 직접 수정할 수 있다.
  *
  * GE_Skill_ChargeDelay 예시:
- *   UAbilityModifierComponent
- *     TargetFragmentTag = "Fragment.Charge"
+ *   UAbilityFragmentModifierComponent
+ *     TargetFragmentTag = "AbilityFragment.Charge"
  *     PropertyName      = "MaxChargeTime"
  *     ModOp             = Additive
  *     Magnitude         = 1.2
  */
 UCLASS(DisplayName = "Fragment: Charge Attack")
-class PRACTICE_API UChargeFragment : public UAbilityFragment
+class PRACTICE_API UChargeAbilityFragment : public UAbilityFragment
 {
 	GENERATED_BODY()
 
 public:
-	UChargeFragment();
+	UChargeAbilityFragment();
 
 	/** 최대 차징 시간 (초). GE로 증가 가능. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Charge", meta = (ClampMin = 0.f, Units = "s"))

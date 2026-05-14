@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ChargeAbility.h"
-#include "ChargeFragment.h"
+#include "ChargeAbilityFragment.h"
 #include "Logic_SphereTrace.h"
 #include "PracticeGameplayTags.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -9,7 +9,7 @@
 
 UChargeAbility::UChargeAbility()
 {
-	// AbilityDataRegistry의 스키마 키로 사용됨
+	// FragmentRegistry의 스키마 키로 사용됨
 	// "Ability.Attack.Charge" → Data.Charge.* 자동 로드
 	FGameplayTagContainer Tags;
 	Tags.AddTag(PracticeGameplayTags::Ability_Attack_Charge);
@@ -42,7 +42,7 @@ void UChargeAbility::ActivateAbility(
 	ScanAndApplyGEModifiers();
 
 	// ChargeFragment에서 수치 읽기 (없으면 자체 프로퍼티 폴백)
-	if (const UChargeFragment* CF = GetFragment<UChargeFragment>())
+	if (const UChargeAbilityFragment* CF = GetFragment<UChargeAbilityFragment>())
 	{
 		RuntimeMaxChargeTime    = CF->MaxChargeTime;
 		RuntimeMinChargeTime    = CF->MinChargeTime;

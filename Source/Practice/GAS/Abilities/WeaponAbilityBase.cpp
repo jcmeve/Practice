@@ -5,8 +5,8 @@
 #include "WeaponInstance.h"
 #include "WeaponBaseData.h"
 #include "PlayerAttributeSet.h"
-#include "AbilityDataRegistry.h"
-#include "AbilityModifierComponent.h"
+#include "AbilityFragmentRegistry.h"
+#include "AbilityFragmentModifierComponent.h"
 #include "LogicInjectorComponent.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -141,10 +141,10 @@ void UWeaponAbilityBase::ScanAndApplyGEModifiers()
 
 		const UGameplayEffect* GEDef = ActiveGE->Spec.Def;
 
-		// ② AbilityModifierComponent → Fragment 수정
-		if (const UAbilityModifierComponent* ModComp = GEDef->FindComponent<UAbilityModifierComponent>())
+		// ② FragmentModifierComponent → Fragment 프로퍼티 수정
+		if (const UAbilityFragmentModifierComponent* ModComp = GEDef->FindComponent<UAbilityFragmentModifierComponent>())
 		{
-			for (const FAbilityTagModifier& Mod : ModComp->Modifiers)
+			for (const FAbilityFragmentModifier& Mod : ModComp->Modifiers)
 			{
 				// Fragment 없으면 이 어빌리티엔 해당 없음 — 조용히 skip
 				TObjectPtr<UAbilityFragment>* FragPtr = RuntimeFragments.Find(Mod.TargetFragmentTag);
@@ -316,7 +316,7 @@ void UWeaponAbilityBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
 
 void UWeaponAbilityBase::SyncFragmentsToTags()
 {
-	if (!DataRegistry) return;
+	if (!FragmentRegistry) return;
 
 	// 기존 Fragment를 태그로 색인 (디자이너가 수정한 값 유지)
 	TMap<FGameplayTag, UAbilityFragment*> Existing;
@@ -339,7 +339,7 @@ void UWeaponAbilityBase::SyncFragmentsToTags()
 
 	for (const FGameplayTag& AbilityTag : GetAssetTags())
 	{
-		for (TSubclassOf<UAbilityFragment> FragClass : DataRegistry->GetRequiredFragmentClasses(AbilityTag))
+		for (TSubclassOf<UAbilityFragment> FragClass : FragmentRegistry->GetRequiredFragmentClasses(AbilityTag))
 		{
 			if (!FragClass) continue;
 			const UAbilityFragment* CDO = GetDefault<UAbilityFragment>(FragClass);
@@ -375,5 +375,7 @@ void UWeaponAbilityBase::SyncFragmentsToTags()
 	Fragments = NewFragments;
 	Modify();
 }
+
+
 
 #endif

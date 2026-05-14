@@ -11,7 +11,7 @@
  * 어빌리티 데이터 Fragment 베이스.
  *
  * 관련 변수들을 논리적으로 묶는 단위.
- * AbilityTag ↔ Fragment 매핑은 AbilityDataRegistry에서 정의.
+ * AbilityTag ↔ Fragment 매핑은 FragmentRegistry에서 정의.
  *
  * 서브클래스는 생성자에서 FragmentTag를 설정한다.
  * WeaponAbilityBase의 PostEditChangeProperty가 AbilityTags 변경을 감지하면
@@ -20,7 +20,7 @@
  *
  * 런타임 시:
  *   ActivateAbility → Fragments를 복제해서 RuntimeFragments 구성
- *   GE AbilityModifierComponent → TargetFragmentTag + PropertyName으로 수정
+ *   GE FragmentModifierComponent → TargetFragmentTag + PropertyName으로 수정
  *   Ability/Logic → GetFragment<T>()로 읽기
  */
 UCLASS(Abstract, DefaultToInstanced, EditInlineNew, BlueprintType)

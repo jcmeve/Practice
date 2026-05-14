@@ -60,7 +60,7 @@ namespace PracticeGameplayTags
 
 	// ── Ability ───────────────────────────────────────────────────────────────
 	// UGameplayAbility::AbilityTags에 설정.
-	// AbilityDataRegistry::AbilitySchema 키로도 사용된다.
+	// FragmentRegistry::AbilitySchema 키로도 사용된다.
 
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack);         // "Ability.Attack"
 	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack_Combo);   // "Ability.Attack.Combo"
@@ -106,9 +106,9 @@ namespace PracticeGameplayTags
 
 	// ── Fragment 태그 ────────────────────────────────────────────────────────
 	// UAbilityFragment 서브클래스가 FragmentTag로 사용.
-	// AbilityDataRegistry 스키마의 키이자 RuntimeFragments의 키.
+	// FragmentRegistry 스키마의 키이자 RuntimeFragments의 키.
 
-	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fragment_Charge); // "Fragment.Charge"
+	PRACTICE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityFragment_Charge); // "AbilityFragment.Charge"
 
 	// ── Skill ─────────────────────────────────────────────────────────────────
 	// 스킬 획득 시 ASC에 추가되는 태그. Logic에서 읽어 동작을 변경한다.

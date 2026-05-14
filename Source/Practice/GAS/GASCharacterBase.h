@@ -194,7 +194,7 @@ public:
 
 	/**
 	 * 차지 유예 스킬에 적용할 GE 에셋.
-	 * BP에서 UAbilityModifierComponent가 설정된 GE를 지정한다.
+	 * BP에서 UAbilityFragmentModifierComponent가 설정된 GE를 지정한다.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS|Debug")
 	TSubclassOf<UGameplayEffect> ChargeDelaySkillEffect;

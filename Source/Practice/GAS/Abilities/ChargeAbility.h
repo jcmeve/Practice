@@ -23,7 +23,7 @@ class UAbilityTask_WaitGameplayEvent;
  *   - Logic_SphereTrace : 피격 판정
  *   → 모두 이벤트 기반, 이 클래스와 결합 없음
  *
- * RuntimeData (UAbilityDataRegistry에서 자동 읽기, 없으면 아래 프로퍼티 폴백):
+ * RuntimeData (UAbilityFragmentRegistry에서 자동 읽기, 없으면 아래 프로퍼티 폴백):
  *   Data.Charge.MaxChargeTime    → MaxChargeTime
  *   Data.Charge.MinChargeTime    → MinChargeTime
  *   Data.Charge.DamageMultiplier → MaxChargeDamageMultiplier

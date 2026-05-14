@@ -7,13 +7,14 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "AbilityLogicBase.h"
 #include "AbilityFragment.h"
+#include "AbilityFragmentModifierComponent.h"
 #include "WeaponTypes.h"
 #include "WeaponAbilityBase.generated.h"
 
 class AGASCharacterBase;
 class UWeaponInstance;
 class UWeaponBaseData;
-class UAbilityDataRegistry;
+class UAbilityFragmentRegistry;
 
 /**
  * B방식 무기 어빌리티 베이스 — 로직 주입 Shell.
@@ -53,8 +54,8 @@ public:
 	 * PostEditChangeProperty가 이 레지스트리를 참조해 Fragments를 자동 구성한다.
 	 * 부모 BP에 한 번만 설정하면 자식 어빌리티가 상속한다.
 	 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilityData")
-	TObjectPtr<UAbilityDataRegistry> DataRegistry;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Fragment")
+	TObjectPtr<UAbilityFragmentRegistry> FragmentRegistry;
 
 	/**
 	 * 이 어빌리티가 보유하는 Fragment 인스턴스 목록.
@@ -170,7 +171,7 @@ protected:
 
 	/**
 	 * Fragments를 복제 후 RuntimeFragments 구성,
-	 * GE AbilityModifierComponent를 리플렉션으로 적용,
+	 * GE FragmentModifierComponent를 리플렉션으로 적용,
 	 * ULogicInjectorComponent를 InjectedLogics에 추가.
 	 */
 	void ScanAndApplyGEModifiers();
